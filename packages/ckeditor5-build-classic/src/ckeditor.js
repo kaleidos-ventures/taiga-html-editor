@@ -42,7 +42,7 @@ import Code from '@ckeditor/ckeditor5-basic-styles/src/code';
 import MentionCustomization from '../plugins/mention-customization';
 import AttachFile from '../plugins/attach-file';
 
-import TextPartLanguage from '@ckeditor/ckeditor5-language/src/TextPartLanguage';
+import TextPartLanguage from '@ckeditor/ckeditor5-language/src/textpartlanguage';
 
 // import '../theme/styles.css'
 
