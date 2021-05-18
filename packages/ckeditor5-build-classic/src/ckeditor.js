@@ -42,6 +42,8 @@ import Code from '@ckeditor/ckeditor5-basic-styles/src/code';
 import MentionCustomization from '../plugins/mention-customization';
 import AttachFile from '../plugins/attach-file';
 
+import TextPartLanguage from '@ckeditor/ckeditor5-language/src/textpartlanguage';
+
 // import '../theme/styles.css'
 
 export default class ClassicEditor extends ClassicEditorBase {}
@@ -81,6 +83,7 @@ ClassicEditor.builtinPlugins = [
 	HorizontalLine,
 	ImageInsert,
 	LinkImage,
+	TextPartLanguage
 ];
 
 // Editor configuration.
@@ -106,7 +109,8 @@ ClassicEditor.defaultConfig = {
 			'removeFormat',
 			'horizontalLine',
 			'undo',
-			'redo'
+			'redo',
+			'textPartLanguage'
 		]
 	},
 	image: {
