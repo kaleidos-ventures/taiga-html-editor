@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -19,6 +19,7 @@ import ConversionHelpers from './conversionhelpers';
 
 import { cloneDeep } from 'lodash-es';
 import CKEditorError from '@ckeditor/ckeditor5-utils/src/ckeditorerror';
+import toArray from '@ckeditor/ckeditor5-utils/src/toarray';
 
 /**
  * Downcast conversion helper functions.
@@ -359,18 +360,19 @@ export default class DowncastHelpers extends ConversionHelpers {
 	 *
 	 *		editor.conversion.for( 'downcast' ).markerToHighlight( {
 	 *			model: 'comment',
-	 *			view: { classes: 'new-comment' },
+	 *			view: { classes: 'comment' },
 	 *			converterPriority: 'high'
 	 *		} );
 	 *
 	 *		editor.conversion.for( 'downcast' ).markerToHighlight( {
 	 *			model: 'comment',
-	 *			view: ( data, converstionApi ) => {
-	 *				// Assuming that the marker name is in a form of comment:commentType.
-	 *				const commentType = data.markerName.split( ':' )[ 1 ];
+	 *			view: ( data, conversionApi ) => {
+	 *				// Assuming that the marker name is in a form of comment:commentType:commentId.
+	 *				const [ , commentType, commentId ] = data.markerName.split( ':' );
 	 *
 	 *				return {
-	 *					classes: [ 'comment', 'comment-' + commentType ]
+	 *					classes: [ 'comment', 'comment-' + commentType ],
+	 *					attributes: { 'data-comment-id': commentId }
 	 *				};
 	 *			}
 	 *		} );
@@ -1136,7 +1138,7 @@ function changeAttribute( attributeCreator ) {
 		// First remove the old attribute if there was one.
 		if ( data.attributeOldValue !== null && oldAttribute ) {
 			if ( oldAttribute.key == 'class' ) {
-				const classes = Array.isArray( oldAttribute.value ) ? oldAttribute.value : [ oldAttribute.value ];
+				const classes = toArray( oldAttribute.value );
 
 				for ( const className of classes ) {
 					viewWriter.removeClass( className, viewElement );
@@ -1155,7 +1157,7 @@ function changeAttribute( attributeCreator ) {
 		// Then set the new attribute.
 		if ( data.attributeNewValue !== null && newAttribute ) {
 			if ( newAttribute.key == 'class' ) {
-				const classes = Array.isArray( newAttribute.value ) ? newAttribute.value : [ newAttribute.value ];
+				const classes = toArray( newAttribute.value );
 
 				for ( const className of classes ) {
 					viewWriter.addClass( className, viewElement );

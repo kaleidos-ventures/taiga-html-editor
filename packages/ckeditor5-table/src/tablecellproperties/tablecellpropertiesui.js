@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -7,12 +7,10 @@
  * @module table/tablecellproperties/tablecellpropertiesui
  */
 
-import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
-import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
-import clickOutsideHandler from '@ckeditor/ckeditor5-ui/src/bindings/clickoutsidehandler';
-import ContextualBalloon from '@ckeditor/ckeditor5-ui/src/panel/balloon/contextualballoon';
+import { Plugin } from 'ckeditor5/src/core';
+import { ButtonView, clickOutsideHandler, ContextualBalloon, getLocalizedColorOptions, normalizeColorOptions } from 'ckeditor5/src/ui';
+
 import TableCellPropertiesView from './ui/tablecellpropertiesview';
-import tableCellProperties from './../../theme/icons/table-cell-properties.svg';
 import {
 	colorFieldValidator,
 	getLocalizedColorErrorText,
@@ -21,13 +19,11 @@ import {
 	lengthFieldValidator,
 	lineWidthFieldValidator
 } from '../utils/ui/table-properties';
-import {
-	getLocalizedColorOptions,
-	normalizeColorOptions
-} from '@ckeditor/ckeditor5-ui/src/colorgrid/utils';
 import { debounce } from 'lodash-es';
 import { getTableWidgetAncestor } from '../utils/ui/widget';
 import { getBalloonCellPositionData, repositionContextualBalloon } from '../utils/ui/contextualballoon';
+
+import tableCellProperties from './../../theme/icons/table-cell-properties.svg';
 
 const ERROR_TEXT_TIMEOUT = 500;
 
@@ -292,6 +288,9 @@ export default class TableCellPropertiesUI extends Plugin {
 	_showView() {
 		const editor = this.editor;
 
+		// Update the view with the model values.
+		this._fillViewFormFromCommandValues();
+
 		this._balloon.add( {
 			view: this.view,
 			position: getBalloonCellPositionData( editor )
@@ -299,9 +298,6 @@ export default class TableCellPropertiesUI extends Plugin {
 
 		// Create a new batch. Clicking "Cancel" will undo this batch.
 		this._undoStepBatch = editor.model.createBatch();
-
-		// Update the view with the model values.
-		this._fillViewFormFromCommandValues();
 
 		// Basic a11y.
 		this.view.focus();

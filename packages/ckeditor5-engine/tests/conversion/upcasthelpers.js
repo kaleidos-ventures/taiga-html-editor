@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -30,6 +30,8 @@ import ViewSelection from '../../src/view/selection';
 import ViewRange from '../../src/view/range';
 import { StylesProcessor } from '../../src/view/stylesmap';
 import Writer from '../../src/model/writer';
+
+import toArray from '@ckeditor/ckeditor5-utils/src/toarray';
 
 /* globals console */
 
@@ -373,6 +375,125 @@ describe( 'UpcastHelpers', () => {
 				),
 				'<paragraph><$text bold="true">Foo</$text></paragraph>'
 			);
+		} );
+
+		// #8921.
+		describe( 'overwriting attributes while converting nested elements', () => {
+			beforeEach( () => {
+				schema.extend( '$text', {
+					allowAttributes: [ 'fontSize', 'fontColor' ]
+				} );
+
+				upcastHelpers.elementToAttribute( {
+					view: {
+						name: 'span',
+						styles: {
+							'font-size': /[\s\S]+/
+						}
+					},
+					model: {
+						key: 'fontSize',
+						value: viewElement => {
+							const fontSize = viewElement.getStyle( 'font-size' );
+							const value = fontSize.substr( 0, fontSize.length - 2 );
+
+							return Number( value );
+						}
+					}
+				} );
+
+				upcastHelpers.elementToAttribute( {
+					view: {
+						name: 'span',
+						styles: {
+							'color': /#[a-f0-9]{6}/
+						}
+					},
+					model: {
+						key: 'fontColor',
+						value: viewElement => viewElement.getStyle( 'color' )
+					}
+				} );
+			} );
+
+			it( 'should not overwrite attributes if nested elements have the same attribute but different values', () => {
+				const viewElement = viewParse( '<span style="font-size:9px"><span style="font-size:11px">Bar</span></span>' );
+
+				expectResult(
+					viewElement,
+					'<$text fontSize="11">Bar</$text>'
+				);
+			} );
+
+			it( 'should convert text before the nested duplicated attribute with the most outer value', () => {
+				const viewElement = viewParse( '<span style="font-size:9px">Foo<span style="font-size:11px">Bar</span></span>' );
+
+				expectResult(
+					viewElement,
+					'<$text fontSize="9">Foo</$text><$text fontSize="11">Bar</$text>'
+				);
+			} );
+
+			it( 'should convert text after the nested duplicated attribute with the most outer values', () => {
+				const viewElement = viewParse( '<span style="font-size:9px"><span style="font-size:11px">Bar</span>Bom</span>' );
+
+				expectResult(
+					viewElement,
+					'<$text fontSize="11">Bar</$text><$text fontSize="9">Bom</$text>'
+				);
+			} );
+
+			it( 'should convert texts before and after the nested duplicated attribute with the most outer value', () => {
+				const viewElement = viewParse( '<span style="font-size:9px">Foo<span style="font-size:11px">Bar</span>Bom</span>' );
+
+				expectResult(
+					viewElement,
+					'<$text fontSize="9">Foo</$text><$text fontSize="11">Bar</$text><$text fontSize="9">Bom</$text>'
+				);
+			} );
+
+			it( 'should work with multiple duplicated attributes', () => {
+				const viewElement = viewParse(
+					'<span style="font-size:9px;color: #0000ff"><span style="font-size:11px;color: #ff0000">Bar</span></span>'
+				);
+
+				expectResult(
+					viewElement,
+					'<$text fontColor="#ff0000" fontSize="11">Bar</$text>'
+				);
+			} );
+
+			it( 'should convert non-duplicated attributes from the most outer element', () => {
+				const viewElement = viewParse(
+					'<span style="font-size:9px;color: #0000ff"><span style="font-size:11px;">Bar</span></span>'
+				);
+
+				expectResult(
+					viewElement,
+					'<$text fontColor="#0000ff" fontSize="11">Bar</$text>'
+				);
+			} );
+
+			// See https://github.com/ckeditor/ckeditor5/pull/9249#issuecomment-813935851
+			it( 'should consume both elements even if the attribute from the most inner element will be used', () => {
+				upcastDispatcher.on( 'element:span', ( evt, data, conversionApi ) => {
+					const viewItem = data.viewItem;
+					const wasConsumed = conversionApi.consumable.consume( viewItem, {
+						styles: [ 'font-size' ]
+					} );
+
+					expect( wasConsumed, `span[fontSize=${ viewItem.getStyle( 'font-size' ) }]` ).to.equal( false );
+				}, { priority: 'lowest' } );
+
+				const viewElement = viewParse(
+					'<span style="font-size:9px;"><span style="font-size:11px;">Bar</span></span>'
+				);
+
+				expectResult(
+					viewElement,
+					'<$text fontSize="11">Bar</$text>'
+				);
+			} );
 		} );
 	} );
 
@@ -899,7 +1020,7 @@ describe( 'UpcastHelpers', () => {
 		const conversionResult = model.change( writer => upcastDispatcher.convert( viewToConvert, writer ) );
 
 		if ( markers ) {
-			markers = Array.isArray( markers ) ? markers : [ markers ];
+			markers = toArray( markers );
 
 			for ( const marker of markers ) {
 				expect( conversionResult.markers.has( marker.name ) ).to.be.true;

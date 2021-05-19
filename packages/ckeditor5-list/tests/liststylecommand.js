@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -96,7 +96,7 @@ describe( 'ListStyleCommand', () => {
 		it( 'should return the value of `listStyle` attribute for the selection inside a nested list', () => {
 			setData( model,
 				'<listItem listIndent="0" listType="bulleted" listStyle="square">1.</listItem>' +
-				'<listItem listIndent="0" listType="bulleted" listStyle="disc">1.1.[]</listItem>' +
+				'<listItem listIndent="1" listType="bulleted" listStyle="disc">1.1.[]</listItem>' +
 				'<listItem listIndent="0" listType="bulleted" listStyle="square">2.</listItem>'
 			);
 
@@ -106,7 +106,7 @@ describe( 'ListStyleCommand', () => {
 		it( 'should return the value of `listStyle` attribute from a list where the selection starts (selection over nested list)', () => {
 			setData( model,
 				'<listItem listIndent="0" listType="bulleted" listStyle="square">1.</listItem>' +
-				'<listItem listIndent="0" listType="bulleted" listStyle="disc">1.1.[</listItem>' +
+				'<listItem listIndent="1" listType="bulleted" listStyle="disc">1.1.[</listItem>' +
 				'<listItem listIndent="0" listType="bulleted" listStyle="square">2.]</listItem>'
 			);
 

@@ -257,7 +257,7 @@ ClassicEditor.defaultConfig = {
 			'link',
 			'bulletedList',
 			'numberedList',
-			'imageUpload',
+			'uploadImage',
 			'blockQuote',
 			'undo',
 			'redo'
@@ -344,7 +344,7 @@ ClassicEditor
 			'link',
 			'bulletedList',
 			'numberedList',
-			'imageUpload',
+			'uploadImage',
 			'blockQuote',
 			'undo',
 			'redo'
@@ -459,7 +459,8 @@ Then, add this item to webpack [`module.rules`](https://webpack.js.org/configura
 module: {
 	rules: [
 		{
-			test: /ckeditor5-[^\/\\]+[\/\\].+\.js$/,
+			// Match files from the `ckeditor5` package but also `ckeditor5-*` packages.
+			test: /(ckeditor5(?:-[^\/\\]+)?)[\/\\].+\.js$/,
 			use: [
 				{
 					loader: 'babel-loader',

@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -324,7 +324,7 @@ export default class Schema {
 	 *		const text = writer.createText( 'foo' );
 	 *		schema.isSelectable( text ); // -> false
 	 *
-	 * See the {@glink framework/guides/deep-dive/schema#selectable-elements Selectable elements} section of the Schema deep dive}
+	 * See the {@glink framework/guides/deep-dive/schema#selectable-elements Selectable elements section} of the Schema deep dive
 	 * guide for more details.
 	 *
 	 * @param {module:engine/model/item~Item|module:engine/model/schema~SchemaContextItem|String} item
@@ -351,7 +351,7 @@ export default class Schema {
 	 *		const text = writer.createText( 'foo' );
 	 *		schema.isContent( text ); // -> true
 	 *
-	 * See the {@glink framework/guides/deep-dive/schema#content-elements Content elements} section of the Schema deep dive}
+	 * See the {@glink framework/guides/deep-dive/schema#content-elements Content elements section} of the Schema deep dive
 	 * guide for more details.
 	 *
 	 * @param {module:engine/model/item~Item|module:engine/model/schema~SchemaContextItem|String} item
@@ -1219,14 +1219,14 @@ mix( Schema, ObservableMixin );
  * Most block type items will inherit from `$block` (through `inheritAllFrom`).
  *
  * Read more about the block elements in the
- * {@glink framework/guides/deep-dive/schema#block-elements Block elements} section of the Schema deep dive} guide.
+ * {@glink framework/guides/deep-dive/schema#block-elements Block elements section} of the Schema deep dive guide.
  *
  * @property {Boolean} isInline
  * Whether an item is "text-like" and should be treated as an inline node. Examples of inline elements:
  * `$text`, `softBreak` (`<br>`), etc.
  *
  * Read more about the inline elements in the
- * {@glink framework/guides/deep-dive/schema#inline-elements Inline elements} section of the Schema deep dive} guide.
+ * {@glink framework/guides/deep-dive/schema#inline-elements Inline elements section} of the Schema deep dive guide.
  *
  * @property {Boolean} isLimit
  * It can be understood as whether this element should not be split by <kbd>Enter</kbd>.
@@ -1234,7 +1234,7 @@ mix( Schema, ObservableMixin );
  * a limit element are limited to its content.
  *
  * Read more about the limit elements in the
- * {@glink framework/guides/deep-dive/schema#limit-elements Limit elements} section of the Schema deep dive} guide.
+ * {@glink framework/guides/deep-dive/schema#limit-elements Limit elements section} of the Schema deep dive guide.
  *
  * @property {Boolean} isObject
  * Whether an item is "self-contained" and should be treated as a whole. Examples of object elements:
@@ -1244,7 +1244,7 @@ mix( Schema, ObservableMixin );
  * {@link module:engine/model/schema~Schema#isLimit `isLimit()`} returns `true` for object elements automatically.
  *
  * Read more about the object elements in the
- * {@glink framework/guides/deep-dive/schema#object-elements Object elements} section of the Schema deep dive} guide.
+ * {@glink framework/guides/deep-dive/schema#object-elements Object elements section} of the Schema deep dive guide.
  *
  * @property {Boolean} isSelectable
  * `true` when an element should be selectable as a whole by the user. Examples of selectable elements: `image`, `table`, `tableCell`, etc.
@@ -1253,7 +1253,7 @@ mix( Schema, ObservableMixin );
  * {@link module:engine/model/schema~Schema#isSelectable `isSelectable()`} returns `true` for object elements automatically.
  *
  * Read more about selectable elements in the
- * {@glink framework/guides/deep-dive/schema#selectable-elements Selectable elements} section of the Schema deep dive} guide.
+ * {@glink framework/guides/deep-dive/schema#selectable-elements Selectable elements section} of the Schema deep dive guide.
  *
  * @property {Boolean} isContent
  * An item is a content when it always finds its way to the editor data output regardless of the number and type of its descendants.
@@ -1263,7 +1263,7 @@ mix( Schema, ObservableMixin );
  * {@link module:engine/model/schema~Schema#isContent `isContent()`} returns `true` for object elements automatically.
  *
  * Read more about content elements in the
- * {@glink framework/guides/deep-dive/schema#content-elements Content elements} section of the Schema deep dive} guide.
+ * {@glink framework/guides/deep-dive/schema#content-elements Content elements section} of the Schema deep dive guide.
  */
 
 /**
@@ -1326,10 +1326,6 @@ export class SchemaContext {
 			// `context` is item or position.
 			// Position#getAncestors() doesn't accept any parameters but it works just fine here.
 			context = context.getAncestors( { includeSelf: true } );
-		}
-
-		if ( context[ 0 ] && typeof context[ 0 ] != 'string' && context[ 0 ].is( 'documentFragment' ) ) {
-			context.shift();
 		}
 
 		this._items = context.map( mapContextItem );
@@ -1510,7 +1506,7 @@ export class SchemaContext {
  *		schema.checkAttribute( textNode, 'bold' );
  *
  * But sometimes you want to check whether a text at a given position might've had some attribute,
- * in which case you can create a context by missing an array of elements with a `'$text'` string:
+ * in which case you can create a context by mixing in an array of elements with a `'$text'` string:
  *
  *		// Check in [ rootElement, paragraphElement, textNode ].
  *		schema.checkChild( [ ...positionInParagraph.getAncestors(), '$text' ], 'bold' );
@@ -1708,9 +1704,9 @@ function getValues( obj ) {
 }
 
 function mapContextItem( ctxItem ) {
-	if ( typeof ctxItem == 'string' ) {
+	if ( typeof ctxItem == 'string' || ctxItem.is( 'documentFragment' ) ) {
 		return {
-			name: ctxItem,
+			name: typeof ctxItem == 'string' ? ctxItem : '$documentFragment',
 
 			* getAttributeKeys() {},
 

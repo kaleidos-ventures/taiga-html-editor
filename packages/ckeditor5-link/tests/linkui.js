@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -12,6 +12,7 @@ import isRange from '@ckeditor/ckeditor5-utils/src/dom/isrange';
 import { keyCodes } from '@ckeditor/ckeditor5-utils/src/keyboard';
 import { getData as getModelData, setData as setModelData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model';
 import { getData as getViewData } from '@ckeditor/ckeditor5-engine/src/dev-utils/view';
+import env from '@ckeditor/ckeditor5-utils/src/env';
 
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote';
@@ -788,7 +789,8 @@ describe( 'LinkUI', () => {
 
 			editor.keystrokes.press( {
 				keyCode: keyCodes.k,
-				ctrlKey: true,
+				ctrlKey: !env.isMac,
+				metaKey: env.isMac,
 				preventDefault: sinon.spy(),
 				stopPropagation: sinon.spy()
 			} );
@@ -802,7 +804,8 @@ describe( 'LinkUI', () => {
 
 			editor.keystrokes.press( {
 				keyCode: keyCodes.k,
-				ctrlKey: true,
+				ctrlKey: !env.isMac,
+				metaKey: env.isMac,
 				preventDefault: sinon.spy(),
 				stopPropagation: sinon.spy()
 			} );
@@ -816,7 +819,8 @@ describe( 'LinkUI', () => {
 
 			editor.keystrokes.press( {
 				keyCode: keyCodes.k,
-				ctrlKey: true,
+				ctrlKey: !env.isMac,
+				metaKey: env.isMac,
 				preventDefault: preventDefaultSpy,
 				stopPropagation: stopPropagationSpy
 			} );
@@ -837,7 +841,8 @@ describe( 'LinkUI', () => {
 
 			editor.keystrokes.press( {
 				keyCode: keyCodes.k,
-				ctrlKey: true,
+				ctrlKey: !env.isMac,
+				metaKey: env.isMac,
 				preventDefault: sinon.spy(),
 				stopPropagation: sinon.spy()
 			} );
@@ -859,7 +864,8 @@ describe( 'LinkUI', () => {
 
 			editor.keystrokes.press( {
 				keyCode: keyCodes.k,
-				ctrlKey: true,
+				ctrlKey: !env.isMac,
+				metaKey: env.isMac,
 				preventDefault: sinon.spy(),
 				stopPropagation: sinon.spy()
 			} );
@@ -868,7 +874,8 @@ describe( 'LinkUI', () => {
 
 			editor.keystrokes.press( {
 				keyCode: keyCodes.k,
-				ctrlKey: true,
+				ctrlKey: !env.isMac,
+				metaKey: env.isMac,
 				preventDefault: sinon.spy(),
 				stopPropagation: sinon.spy()
 			} );
@@ -1107,6 +1114,18 @@ describe( 'LinkUI', () => {
 				sinon.assert.calledOnce( selectSpy );
 			} );
 
+			it( 'should disable CSS transitions before showing the form to avoid unnecessary animations' +
+				'(and then enable them again)', () => {
+				const addSpy = sinon.spy( balloon, 'add' );
+				const disableCssTransitionsSpy = sinon.spy( formView, 'disableCssTransitions' );
+				const enableCssTransitionsSpy = sinon.spy( formView, 'enableCssTransitions' );
+				const selectSpy = sinon.spy( formView.urlInputView.fieldView, 'select' );
+
+				actionsView.fire( 'edit' );
+
+				sinon.assert.callOrder( disableCssTransitionsSpy, addSpy, selectSpy, enableCssTransitionsSpy );
+			} );
+
 			it( 'should execute unlink command on actionsView#unlink event', () => {
 				const executeSpy = testUtils.sinon.spy( editor, 'execute' );
 
@@ -1150,7 +1169,8 @@ describe( 'LinkUI', () => {
 			it( 'should add the #formView upon Ctrl+K keystroke press', () => {
 				const keyEvtData = {
 					keyCode: keyCodes.k,
-					ctrlKey: true,
+					ctrlKey: !env.isMac,
+					metaKey: env.isMac,
 					preventDefault: sinon.spy(),
 					stopPropagation: sinon.spy()
 				};

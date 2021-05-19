@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -7,9 +7,9 @@
  * @module table/tableediting
  */
 
-import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
+import { Plugin } from 'ckeditor5/src/core';
 
-import upcastTable, { skipEmptyTableRow } from './converters/upcasttable';
+import upcastTable, { ensureParagraphInTableCell, skipEmptyTableRow } from './converters/upcasttable';
 import {
 	convertParagraphInTableCell,
 	downcastInsertCell,
@@ -84,13 +84,6 @@ export default class TableEditing extends Plugin {
 		// Allow all $block content inside a table cell.
 		schema.extend( '$block', { allowIn: 'tableCell' } );
 
-		// Disallow a table in a table.
-		schema.addChildCheck( ( context, childDefinition ) => {
-			if ( childDefinition.name == 'table' && Array.from( context.getNames() ).includes( 'table' ) ) {
-				return false;
-			}
-		} );
-
 		// Table conversion.
 		conversion.for( 'upcast' ).add( upcastTable() );
 
@@ -107,6 +100,8 @@ export default class TableEditing extends Plugin {
 		// Table cell conversion.
 		conversion.for( 'upcast' ).elementToElement( { model: 'tableCell', view: 'td' } );
 		conversion.for( 'upcast' ).elementToElement( { model: 'tableCell', view: 'th' } );
+		conversion.for( 'upcast' ).add( ensureParagraphInTableCell( 'td' ) );
+		conversion.for( 'upcast' ).add( ensureParagraphInTableCell( 'th' ) );
 
 		conversion.for( 'editingDowncast' ).add( downcastInsertCell() );
 

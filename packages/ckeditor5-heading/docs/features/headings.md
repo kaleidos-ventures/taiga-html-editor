@@ -43,7 +43,7 @@ The heading feature lets you also use a set of heading buttons instead of the dr
 ## Related features
 
 There are more CKEditor 5 features that can help you format your content:
-* {@link features/basic-styles Basic font styles} &ndash; The essentials, like **bold**, *italic* and others.
+* {@link features/basic-styles Basic text styles} &ndash; The essentials, like **bold**, *italic* and others.
 * {@link features/title Document title} &ndash; Clearly divide your content into a title and body.
 * {@link features/indent Block indentation}  &ndash; Set indentation for text blocks such as paragraphs or lists.
 * {@link features/lists Lists}  &ndash; Organize your content better with ordered and unordered lists you can style.
@@ -91,8 +91,8 @@ For example, the following editor will support the following two heading options
 
 ```html
 <style>
-	// Styles for the heading in the content and for the dropdown item.
-	h2.fancy, .ck-heading_heading2_fancy {
+	/* Styles for the heading in the content and for the dropdown item. */
+	h2.fancy, .ck.ck-button.ck-heading_heading2_fancy {
 		color: #ff0050;
 		font-size: 17px;
 	}
@@ -212,7 +212,7 @@ The {@link module:heading/heading~Heading} plugin registers:
 	```js
 	editor.execute( 'heading', { value: 'heading2' } );
 	```
- 
+
 The {@link module:heading/headingbuttonsui~HeadingButtonsUI} plugin registers six UI button components that will execute the `'heading'` command with the proper value of the `value` attribute:
 
 * `'heading1'`
@@ -221,7 +221,7 @@ The {@link module:heading/headingbuttonsui~HeadingButtonsUI} plugin registers si
 * `'heading4'`
 * `'heading5'`
 * `'heading6'`
-    
+
 The {@link module:paragraph/paragraphbuttonui~ParagraphButtonUI} plugin registers the UI button component: `'paragraph'`.
 
 <info-box>

@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -180,6 +180,23 @@ describe( 'BalloonEditor', () => {
 				plugins: [ Paragraph ]
 			} ).then( editor => {
 				expect( editor.getData() ).to.equal( '<p>Hello world!</p>' );
+
+				return editor.destroy();
+			} ).then( () => {
+				editorElement.remove();
+			} );
+		} );
+
+		// https://github.com/ckeditor/ckeditor5/issues/8974
+		it( 'initializes with empty content if config.initialData is set to an empty string', () => {
+			const editorElement = document.createElement( 'div' );
+			editorElement.innerHTML = '<p><strong>foo</strong> bar</p>';
+
+			return BalloonEditor.create( editorElement, {
+				initialData: '',
+				plugins: [ Paragraph ]
+			} ).then( editor => {
+				expect( editor.getData() ).to.equal( '' );
 
 				return editor.destroy();
 			} ).then( () => {

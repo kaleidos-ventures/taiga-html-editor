@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -9,26 +9,26 @@ import { CS_CONFIG } from '@ckeditor/ckeditor5-cloud-services/tests/_utils/cloud
 
 ClassicEditor
 	.create( document.querySelector( '#snippet-image-resize-buttons' ), {
-		removePlugins: [ 'LinkImage' ],
+		removePlugins: [ 'LinkImage', 'AutoImage' ],
 		toolbar: {
 			viewportTopOffset: window.getViewportTopOffsetConfig()
 		},
 		image: {
 			resizeOptions: [
 				{
-					name: 'imageResize:original',
+					name: 'resizeImage:original',
 					label: 'Original',
 					value: null,
 					icon: 'original'
 				},
 				{
-					name: 'imageResize:50',
+					name: 'resizeImage:50',
 					label: '50%',
 					value: '50',
 					icon: 'medium'
 				},
 				{
-					name: 'imageResize:75',
+					name: 'resizeImage:75',
 					label: '75%',
 					value: '75',
 					icon: 'large'
@@ -44,9 +44,9 @@ ClassicEditor
 				'imageStyle:alignCenter',
 				'imageStyle:alignRight',
 				'|',
-				'imageResize:50',
-				'imageResize:75',
-				'imageResize:original'
+				'resizeImage:50',
+				'resizeImage:75',
+				'resizeImage:original'
 			]
 		},
 		cloudServices: CS_CONFIG
