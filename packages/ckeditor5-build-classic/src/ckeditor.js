@@ -100,5 +100,29 @@ ClassicEditor.defaultConfig = {
 		]
 	},
 	// This value must be kept in sync with the language defined in webpack.config.js.
-	language: 'en'
+	language: 'en',
+	MediaEmbed: {
+		providers: [
+			{
+				name: 'youtube',
+				url: [
+					/^(?:m\.)?youtube\.com\/watch\?v=([\w-]+)/,
+					/^(?:m\.)?youtube\.com\/v\/([\w-]+)/,
+					/^youtube\.com\/embed\/([\w-]+)/,
+					/^youtu\.be\/([\w-]+)/
+				],
+				html: match => {
+					const id = match[ 1 ];
+
+					return (
+						'<p>' +
+							`<a href="https://www.youtube.com/watch?v=${ id }">` +
+								`<img src="http://img.youtube.com/vi/${ id }/0.jpg" alt="">` +
+							'</a>' +
+						'</p>'
+					);
+				}
+			}
+		]
+	}
 };
