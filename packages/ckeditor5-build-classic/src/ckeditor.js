@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -16,6 +16,7 @@ import CKFinder from '@ckeditor/ckeditor5-ckfinder/src/ckfinder';
 import EasyImage from '@ckeditor/ckeditor5-easy-image/src/easyimage';
 import Heading from '@ckeditor/ckeditor5-heading/src/heading';
 import Image from '@ckeditor/ckeditor5-image/src/image';
+import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption';
 import ImageStyle from '@ckeditor/ckeditor5-image/src/imagestyle';
 import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar';
 import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload';
@@ -28,23 +29,7 @@ import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefrom
 import Table from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformation';
-
-import Strikethrough from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
-import CodeBlock from '@ckeditor/ckeditor5-code-block/src/codeblock';
-import Mention from '@ckeditor/ckeditor5-mention/src/mention';
-import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat';
-import HorizontalLine from '@ckeditor/ckeditor5-horizontal-line/src/horizontalline';
-import TodoList from '@ckeditor/ckeditor5-list/src/todolist';
-import ImageInsert from '@ckeditor/ckeditor5-image/src/imageinsert';
-import LinkImage from '@ckeditor/ckeditor5-link/src/linkimage';
-import Code from '@ckeditor/ckeditor5-basic-styles/src/code';
-
-import MentionCustomization from '../plugins/mention-customization';
-import AttachFile from '../plugins/attach-file';
-
-import TextPartLanguage from '@ckeditor/ckeditor5-language/src/textpartlanguage';
-
-// import '../theme/styles.css'
+import CloudServices from '@ckeditor/ckeditor5-cloud-services/src/cloudservices';
 
 export default class ClassicEditor extends ClassicEditorBase {}
 
@@ -57,9 +42,11 @@ ClassicEditor.builtinPlugins = [
 	Italic,
 	BlockQuote,
 	CKFinder,
+	CloudServices,
 	EasyImage,
 	Heading,
 	Image,
+	ImageCaption,
 	ImageStyle,
 	ImageToolbar,
 	ImageUpload,
@@ -71,61 +58,49 @@ ClassicEditor.builtinPlugins = [
 	PasteFromOffice,
 	Table,
 	TableToolbar,
-	TextTransformation,
-	Strikethrough,
-	Code,
-	CodeBlock,
-	Mention,
-	MentionCustomization,
-	RemoveFormat,
-	AttachFile,
-	TodoList,
-	HorizontalLine,
-	ImageInsert,
-	LinkImage,
-	TextPartLanguage
+	TextTransformation
 ];
 
 // Editor configuration.
 ClassicEditor.defaultConfig = {
-	alignment: {
-		options: [ 'left', 'right' ]
-	},
 	toolbar: {
 		items: [
 			'heading',
 			'|',
 			'bold',
 			'italic',
-			'strikethrough',
 			'link',
 			'bulletedList',
 			'numberedList',
 			'|',
-			'imageInsert',
+			'outdent',
+			'indent',
+			'|',
+			'uploadImage',
 			'blockQuote',
 			'insertTable',
-			'codeBlock',
-			'removeFormat',
-			'horizontalLine',
+			'mediaEmbed',
 			'undo',
-			'redo',
-			'textPartLanguage'
+			'redo'
 		]
 	},
 	image: {
 		toolbar: [
-			'imageTextAlternative',
+			'imageStyle:full',
+			'imageStyle:side',
 			'|',
-			'linkImage'
+			'imageTextAlternative'
 		]
 	},
 	table: {
 		contentToolbar: [
 			'tableColumn',
-			'tableRow'
+			'tableRow',
+			'mergeTableCells'
 		]
 	},
+	// This value must be kept in sync with the language defined in webpack.config.js.
+	language: 'en',
 	MediaEmbed: {
 		providers: [
 			{
@@ -149,7 +124,5 @@ ClassicEditor.defaultConfig = {
 				}
 			}
 		]
-	},
-	// This value must be kept in sync with the language defined in webpack.config.js.
-	language: 'en'
+	}
 };
