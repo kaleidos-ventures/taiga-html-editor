@@ -22,7 +22,6 @@ import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload';
 import Indent from '@ckeditor/ckeditor5-indent/src/indent';
 import Link from '@ckeditor/ckeditor5-link/src/link';
 import List from '@ckeditor/ckeditor5-list/src/list';
-import MediaEmbed from '@ckeditor/ckeditor5-media-embed/src/mediaembed';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice';
 import Table from '@ckeditor/ckeditor5-table/src/table';
@@ -68,7 +67,6 @@ ClassicEditor.builtinPlugins = [
 	Indent,
 	Link,
 	List,
-	MediaEmbed,
 	Paragraph,
 	PasteFromOffice,
 	Table,
@@ -129,29 +127,5 @@ ClassicEditor.defaultConfig = {
 		]
 	},
 	// This value must be kept in sync with the language defined in webpack.config.js.
-	language: 'en',
-	MediaEmbed: {
-		providers: [
-			{
-				name: 'youtube',
-				url: [
-					/^(?:m\.)?youtube\.com\/watch\?v=([\w-]+)/,
-					/^(?:m\.)?youtube\.com\/v\/([\w-]+)/,
-					/^youtube\.com\/embed\/([\w-]+)/,
-					/^youtu\.be\/([\w-]+)/
-				],
-				html: match => {
-					const id = match[ 1 ];
-
-					return (
-						'<p>' +
-							`<a href="https://www.youtube.com/watch?v=${ id }">` +
-								`<img src="http://img.youtube.com/vi/${ id }/0.jpg" alt="">` +
-							'</a>' +
-						'</p>'
-					);
-				}
-			}
-		]
-	}
+	language: 'en'
 };
