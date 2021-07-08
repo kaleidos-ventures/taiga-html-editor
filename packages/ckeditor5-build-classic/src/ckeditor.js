@@ -38,6 +38,7 @@ import TodoList from '@ckeditor/ckeditor5-list/src/todolist';
 import ImageInsert from '@ckeditor/ckeditor5-image/src/imageinsert';
 import LinkImage from '@ckeditor/ckeditor5-link/src/linkimage';
 import Code from '@ckeditor/ckeditor5-basic-styles/src/code';
+import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment';
 
 import MentionCustomization from '../plugins/mention-customization';
 import AttachFile from '../plugins/attach-file';
@@ -50,6 +51,7 @@ export default class ClassicEditor extends ClassicEditorBase {}
 
 // Plugins to include in the build.
 ClassicEditor.builtinPlugins = [
+	Alignment,
 	Essentials,
 	UploadAdapter,
 	Autoformat,
@@ -101,6 +103,7 @@ ClassicEditor.defaultConfig = {
 			'link',
 			'bulletedList',
 			'numberedList',
+			'alignment',
 			'|',
 			'imageInsert',
 			'blockQuote',
@@ -126,6 +129,19 @@ ClassicEditor.defaultConfig = {
 			'tableRow'
 		]
 	},
-	// This value must be kept in sync with the language defined in webpack.config.js.
-	language: 'en'
+	language: {
+		content: 'en',
+		textPartLanguage: [
+			{ title: 'العربية', languageCode: 'ar' },
+			{ title: 'Deutsch', languageCode: 'de' },
+			{ title: 'English', languageCode: 'en' },
+			{ title: 'Español', languageCode: 'es' },
+			{ title: 'Français', languageCode: 'fr' },
+			{ title: '日本語', languageCode: 'ja' },
+			{ title: '한국어', languageCode: 'ko' },
+			{ title: 'Português', languageCode: 'pt' },
+			{ title: 'русский', languageCode: 'ru' },
+			{ title: '中文', languageCode: 'zh' }
+		]
+	}
 };
