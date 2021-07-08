@@ -101,6 +101,7 @@ ClassicEditor.defaultConfig = {
 			'italic',
 			'strikethrough',
 			'link',
+			'todoList',
 			'bulletedList',
 			'numberedList',
 			'alignment',
